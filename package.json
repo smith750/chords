@@ -10,12 +10,15 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "tone": "^14.7.77",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.2"
+    "vue-property-decorator": "^8.4.2",
+    "wu": "^2.1.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",
+    "@types/wu": "^2.1.42",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
