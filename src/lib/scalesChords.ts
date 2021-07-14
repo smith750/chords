@@ -132,8 +132,7 @@ const allNotes: Array<Note> = [
 const majorScaleGuide = [true, false, true, false, true, true, false, true, false, true, false, true]
 
 const scale: ((scaleGuide: Array<boolean>, startStep: number) => Array<Note>) = (scaleGuide: Array<boolean>, startStep = 0) => {
-  return wu.zip(wu.cycle(allNotes), wu.cycle(scaleGuide))
-    .dropWhile((noteInfo: [Note, boolean]) => noteInfo[0].step !== startStep)
+  return wu.zip(wu.cycle(allNotes).dropWhile((note: Note) => note.step !== startStep), wu.cycle(scaleGuide))
     .filter((noteInfo: [Note, boolean]) => noteInfo[1])
     .map((noteInfo: [Note, boolean]) => noteInfo[0])
     .take(8)
