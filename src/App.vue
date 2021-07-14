@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <KeyChoice/>
     <Scale/>
     <ChordChart/>
   </div>
@@ -9,11 +10,13 @@
 import { Component, Vue } from 'vue-property-decorator'
 import ChordChart from './components/ChordChart.vue'
 import Scale from './components/Scale.vue'
+import KeyChoice from './components/KeyChoice.vue'
 
 @Component({
   components: {
     ChordChart,
-    Scale
+    Scale,
+    KeyChoice
   }
 })
 

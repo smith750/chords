@@ -5,6 +5,7 @@ interface Note {
   step: number;
   sharp: string;
   flat: string;
+  display(): string;
 }
 
 interface Chord {
@@ -114,25 +115,25 @@ const chord: ((scale: Array<Note>, start: number, size: number) => Chord) =
   }
 
 const allNotes: Array<Note> = [
-  { sharp: 'C', flat: 'C', step: 1 },
-  { sharp: 'C#', flat: 'Db', step: 2 },
-  { sharp: 'D', flat: 'D', step: 3 },
-  { sharp: 'D#', flat: 'Eb', step: 4 },
-  { sharp: 'E', flat: 'E', step: 5 },
-  { sharp: 'F', flat: 'F', step: 6 },
-  { sharp: 'F#', flat: 'Gb', step: 7 },
-  { sharp: 'G', flat: 'G', step: 8 },
-  { sharp: 'G#', flat: 'Ab', step: 9 },
-  { sharp: 'A', flat: 'A', step: 10 },
-  { sharp: 'A#', flat: 'Bb', step: 11 },
-  { sharp: 'B', flat: 'B', step: 12 }
+  { sharp: 'C', flat: 'C', step: 1, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'C#', flat: 'Db', step: 2, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'D', flat: 'D', step: 3, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'D#', flat: 'Eb', step: 4, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'E', flat: 'E', step: 5, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'F', flat: 'F', step: 6, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'F#', flat: 'Gb', step: 7, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'G', flat: 'G', step: 8, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'G#', flat: 'Ab', step: 9, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'A', flat: 'A', step: 10, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'A#', flat: 'Bb', step: 11, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
+  { sharp: 'B', flat: 'B', step: 12, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } }
 ]
 
-const majorScaleGuide = [true, false, true, false, true, true, false, true, false, true, false, true, true]
+const majorScaleGuide = [true, false, true, false, true, true, false, true, false, true, false, true]
 
 const scale: ((scaleGuide: Array<boolean>, startStep: number) => Array<Note>) = (scaleGuide: Array<boolean>, startStep = 0) => {
   return wu.zip(wu.cycle(allNotes), wu.cycle(scaleGuide))
-    .takeWhile((noteInfo: [Note, boolean]) => noteInfo[0].step === startStep)
+    .dropWhile((noteInfo: [Note, boolean]) => noteInfo[0].step !== startStep)
     .filter((noteInfo: [Note, boolean]) => noteInfo[1])
     .map((noteInfo: [Note, boolean]) => noteInfo[0])
     .take(8)

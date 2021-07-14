@@ -39,7 +39,6 @@
 </template>
 
 <script lang="ts">
-import * as Tone from 'tone'
 import ChordCategory from './ChordCategory.vue'
 import Chord from './Chord.vue'
 import ChordEmpty from './ChordEmpty.vue'
@@ -52,7 +51,7 @@ export default {
   },
   data: function () {
     return {
-      synth: new Tone.PolySynth(Tone.Synth).toDestination()
+      synth: this.$store.state.synth
     }
   }
 }
