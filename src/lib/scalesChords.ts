@@ -129,13 +129,19 @@ const allNotes: Array<Note> = [
   { sharp: 'B', flat: 'B', step: 12, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } }
 ]
 
+const lydianScaleGuide = [true, false, true, false, true, false, true, true, false, true, false, true]
 const majorScaleGuide = [true, false, true, false, true, true, false, true, false, true, false, true]
+const mixolydianScaleGuide = [true, false, true, false, true, true, false, true, false, true, true, false]
+const dorianScaleGuide = [true, false, true, true, false, true, false, true, false, true, true, false]
+const minorScaleGuide = [true, false, true, true, false, true, false, true, true, false, true, false]
+const phrygianScaleGuide = [true, true, false, true, false, true, false, true, true, false, true, false]
+const locrianScaleGuide = [true, true, false, true, false, true, true, false, true, false, true, false]
 
 const scale: ((scaleGuide: Array<boolean>, startStep: number) => Array<Note>) = (scaleGuide: Array<boolean>, startStep = 0) => {
   return wu.zip(wu.cycle(allNotes).dropWhile((note: Note) => note.step !== startStep), wu.cycle(scaleGuide))
     .filter((noteInfo: [Note, boolean]) => noteInfo[1])
     .map((noteInfo: [Note, boolean]) => noteInfo[0])
-    .take(8)
+    .take(7)
     .toArray()
 }
 
@@ -144,6 +150,12 @@ export {
   Chord,
   chord,
   allNotes,
+  lydianScaleGuide,
   majorScaleGuide,
+  mixolydianScaleGuide,
+  dorianScaleGuide,
+  minorScaleGuide,
+  phrygianScaleGuide,
+  locrianScaleGuide,
   scale
 }

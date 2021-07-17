@@ -1,14 +1,15 @@
 <template>
   <div class="chord" v-on:mousedown="startNotes" v-on:mouseup="stopNotes">
-    <div class="chord-name">{{ name }}<span v:if="seventh !== undefined" class="seventh">{{ seventh }}</span></div>
-    <div class="chord-symbol">{{ numeral }}<span v:if="seventh !== undefined" class="seventh">{{ seventh }}</span></div>
-    <div class="spelling">{{ spelling }}</div>
+    <div class="chord-name">{{ chordName }}<span v:if="seventh !== undefined" class="seventh">{{ seventh }}</span></div>
+    <div class="chord-symbol" v:if="numeral !== undefined">{{ numeral }}<span v:if="seventh !== undefined" class="seventh">{{ seventh }}</span></div>
+    <div class="spelling">{{ chordSpelling }}</div>
   </div>
 </template>
 
 <script lang="ts">
 import * as Tone from 'tone'
 import { PropType } from 'vue'
+import { Note, Chord } from '../lib/scalesChords'
 
 export default {
   props: {
@@ -16,22 +17,38 @@ export default {
     numeral: String,
     spelling: String,
     seventh: String,
-    notes: { type: Array as PropType<string[]> },
-    synth: Tone.PolySynth
+    chord: { type: Object as PropType<Chord> },
+    notes: { type: Array as PropType<string[]> }
+  },
+  computed: {
+    chordSpelling: function () {
+      if (this.chord) {
+        return this.chord.notes.map((note: Note) => note.sharp).join('-')
+      } else {
+        return this.spelling
+      }
+    },
+    chordName: function () {
+      if (this.chord) {
+        return (this.chord.root.sharp + this.chord.name)
+      } else {
+        return this.name
+      }
+    }
   },
   methods: {
     startNotes: function () {
       if (this.notes !== undefined) {
         const now = Tone.now()
         for (const note of this.notes) {
-          this.synth.triggerAttack(note, now)
+          this.$store.state.synth.triggerAttack(note, now)
         }
       }
     },
     stopNotes: function () {
       if (this.notes !== undefined) {
         const now = Tone.now()
-        this.synth.triggerRelease(this.notes, now)
+        this.$store.state.synth.triggerRelease(this.notes, now)
       }
     }
   }
