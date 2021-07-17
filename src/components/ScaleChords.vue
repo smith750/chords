@@ -1,10 +1,10 @@
 <template>
   <div class="chord-chart">
-    <ChordCategory category="Primary Triads" />
-    <Chord v-for="c in triads" :chord="c" :key="c.root.sharp"/>
+    <ChordCategory :category="scaleName + ' Triads'" />
+    <Chord v-for="cTriad in triads" :chord="cTriad" :key="cTriad.root.sharp + scaleName + 'triad'"/>
 
-    <ChordCategory category="Primary Sevenths" />
-    <Chord v-for="c in sevenths" :chord="c" :key="c.root.sharp"/>
+    <ChordCategory :category="scaleName + ' Sevenths'" />
+    <Chord v-for="cSeventh in sevenths" :chord="cSeventh" :key="cSeventh.root.sharp + scaleName + 'seventh'"/>
   </div>
 </template>
 
@@ -39,11 +39,8 @@ export default {
     }
   },
   data: function () {
-    // const scaleNotes = scale(this.scaleNotesGuide, this.$store.state.key.step)
-    // const triads = scaleNotes.map((note: Note, idx: number) => chord(scaleNotes, idx, 3))
     return {
       synth: this.$store.state.synth
-      // triads
     }
   }
 }

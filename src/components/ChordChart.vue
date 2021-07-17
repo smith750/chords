@@ -1,6 +1,18 @@
 <template>
   <div id="chord-charts">
     <ScaleChords :keyRoot="root" :scaleName="'Major'" :scaleNotesGuide="majorScaleGuide" />
+    <hr/>
+    <ScaleChords :keyRoot="root" :scaleName="'Minor'" :scaleNotesGuide="minorScaleGuide" />
+    <hr/>
+    <ScaleChords :keyRoot="root" :scaleName="'Lydian'" :scaleNotesGuide="lydianScaleGuide" />
+    <hr/>
+    <ScaleChords :keyRoot="root" :scaleName="'Mixolydian'" :scaleNotesGuide="mixolydianScaleGuide" />
+    <hr/>
+    <ScaleChords :keyRoot="root" :scaleName="'Dorian'" :scaleNotesGuide="dorianScaleGuide" />
+    <hr/>
+    <ScaleChords :keyRoot="root" :scaleName="'Phrygian'" :scaleNotesGuide="phrygianScaleGuide" />
+    <hr/>
+    <ScaleChords :keyRoot="root" :scaleName="'Locrian'" :scaleNotesGuide="locrianScaleGuide" />
 
 <!--
     <ChordCategory category="Secondary Dominant Triads" />
@@ -29,7 +41,10 @@
 // import Chord from './Chord.vue'
 // import ChordEmpty from './ChordEmpty.vue'
 import ScaleChords from './ScaleChords.vue'
-import { majorScaleGuide } from '../lib/scalesChords'
+import {
+  majorScaleGuide, minorScaleGuide, lydianScaleGuide, mixolydianScaleGuide,
+  dorianScaleGuide, phrygianScaleGuide, locrianScaleGuide
+} from '../lib/scalesChords'
 
 export default {
   components: {
@@ -42,7 +57,13 @@ export default {
     return {
       synth: this.$store.state.synth,
       root: this.$store.state.key,
-      majorScaleGuide
+      majorScaleGuide,
+      minorScaleGuide,
+      lydianScaleGuide,
+      mixolydianScaleGuide,
+      dorianScaleGuide,
+      phrygianScaleGuide,
+      locrianScaleGuide
     }
   }
 }
