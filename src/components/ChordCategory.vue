@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: 'ChordCategory',
-  props: {
-    category: String
-  }
+import { Component, Prop, Vue } from 'vue-property-decorator'
+
+@Component
+export default class ChordCategory extends Vue {
+  @Prop({ required: true, type: String }) readonly category!: string
 }
 </script>
 

@@ -1,107 +1,151 @@
 // https://fitzgen.github.io/wu.js/#take
 import wu from 'wu'
 
-interface Note {
+class Note {
   step: number;
   sharp: string;
   flat: string;
-  display(): string;
+  circleOfFithsStep: number;
+
+  constructor (step: number, sharp: string, flat: string, circleOfFifthsStep: number) {
+    this.step = step
+    this.sharp = sharp
+    this.flat = flat
+    this.circleOfFithsStep = circleOfFifthsStep
+  }
+
+  get display (): string {
+    return (this.sharp === this.flat) ? this.sharp : this.sharpNote + ' / ' + this.flatNote
+  }
+
+  biasedDisplay (bias: string): string {
+    if (this.sharp === this.flat || bias === 'sharp') {
+      return this.sharp
+    } else {
+      return this.flat
+    }
+  }
+
+  get sharpNote () {
+    return this.sharp.replace('#', '&sharp;')
+  }
+
+  get flatNote () {
+    return this.flat.replace('b', '&flat;')
+  }
 }
 
-interface Chord {
+class Chord {
   notes: Array<Note>;
   root: Note;
   name: string;
-}
 
-const stepsDifference: ((rootNote: Note, deltaNote: Note) => number) = (rootNote: Note, deltaNote: Note) => {
-  if (rootNote.step > deltaNote.step) {
-    return ((deltaNote.step + 12) - rootNote.step)
-  } else {
-    return (deltaNote.step - rootNote.step)
+  constructor (notes: Array<Note>, root: Note) {
+    this.notes = notes
+    this.root = root
+    this.name = this.chordName()
   }
-}
 
-const triadName: ((chordNotes: Array<Note>) => string) = (chordNotes: Array<Note>) => {
-  const middleSteps = stepsDifference(chordNotes[0], chordNotes[1])
-  const outsideSteps = stepsDifference(chordNotes[0], chordNotes[2])
-
-  switch (middleSteps) {
-    case 2:
-      if (outsideSteps === 7) {
-        return 'sus2'
+  midiNotes (): Array<string> {
+    const startStep = this.root.step
+    return this.notes.map((note) => {
+      if (note.step < startStep) {
+        return note.sharp + '4'
+      } else {
+        return note.sharp + '3'
       }
-      break
-    case 3:
-      if (outsideSteps === 7) {
-        return 'm'
-      } else if (outsideSteps === 6) {
-        return 'dim'
-      }
-      break
-    case 4:
-      if (outsideSteps === 7) {
-        return ''
-      } else if (outsideSteps === 8) {
-        return 'aug'
-      }
-      break
-    case 5:
-      if (outsideSteps === 7) {
-        return 'sus4'
-      }
-      break
+    })
   }
-  return 'UNKNOWN'
-}
 
-const seventhName: ((chordNotes: Array<Note>) => string) = (chordNotes: Array<Note>) => {
-  const middleSteps = stepsDifference(chordNotes[0], chordNotes[1])
-  const outsideSteps = stepsDifference(chordNotes[0], chordNotes[2])
-  const topSteps = stepsDifference(chordNotes[0], chordNotes[3])
-
-  switch (middleSteps) {
-    case 3:
-      if (outsideSteps === 7) {
-        if (topSteps === 11) {
-          return 'm (maj 7)'
-        } else if (topSteps === 10) {
-          return 'm7'
-        }
-      } else if (outsideSteps === 6) {
-        if (topSteps === 11) {
-          return 'b5 (maj 7)'
-        } else if (topSteps === 10) {
-          return 'b5/7'
-        }
-      }
-      break
-    case 4:
-      if (outsideSteps === 7) {
-        if (topSteps === 11) {
-          return 'maj7'
-        } else if (topSteps === 10) {
-          return '7'
-        }
-      } else if (outsideSteps === 8) {
-        if (topSteps === 11) {
-          return 'aug (maj 7)'
-        } else if (topSteps === 10) {
-          return 'aug 7'
-        }
-      }
-      break
+  stepsDifference: ((rootNote: Note, deltaNote: Note) => number) = (rootNote: Note, deltaNote: Note) => {
+    if (rootNote.step > deltaNote.step) {
+      return ((deltaNote.step + 12) - rootNote.step)
+    } else {
+      return (deltaNote.step - rootNote.step)
+    }
   }
-  return 'UNKNOWN'
-}
 
-const chordName: ((chordNotes: Array<Note>) => string) = (chordNotes: Array<Note>) => {
-  if (chordNotes.length === 3) {
-    return triadName(chordNotes)
-  } else if (chordNotes.length === 4) {
-    return seventhName(chordNotes)
-  } else {
-    return ''
+  triadName (): string {
+    const middleSteps = this.stepsDifference(this.notes[0], this.notes[1])
+    const outsideSteps = this.stepsDifference(this.notes[0], this.notes[2])
+
+    switch (middleSteps) {
+      case 2:
+        if (outsideSteps === 7) {
+          return 'sus2'
+        }
+        break
+      case 3:
+        if (outsideSteps === 7) {
+          return 'm'
+        } else if (outsideSteps === 6) {
+          return 'dim'
+        }
+        break
+      case 4:
+        if (outsideSteps === 7) {
+          return ''
+        } else if (outsideSteps === 8) {
+          return 'aug'
+        }
+        break
+      case 5:
+        if (outsideSteps === 7) {
+          return 'sus4'
+        }
+        break
+    }
+    return 'UNKNOWN'
+  }
+
+  seventhName (): string {
+    const middleSteps = this.stepsDifference(this.notes[0], this.notes[1])
+    const outsideSteps = this.stepsDifference(this.notes[0], this.notes[2])
+    const topSteps = this.stepsDifference(this.notes[0], this.notes[3])
+
+    switch (middleSteps) {
+      case 3:
+        if (outsideSteps === 7) {
+          if (topSteps === 11) {
+            return 'm (maj 7)'
+          } else if (topSteps === 10) {
+            return 'm7'
+          }
+        } else if (outsideSteps === 6) {
+          if (topSteps === 11) {
+            return '&flat;5 (maj 7)'
+          } else if (topSteps === 10) {
+            return '&flat;5/7'
+          }
+        }
+        break
+      case 4:
+        if (outsideSteps === 7) {
+          if (topSteps === 11) {
+            return 'maj7'
+          } else if (topSteps === 10) {
+            return '7'
+          }
+        } else if (outsideSteps === 8) {
+          if (topSteps === 11) {
+            return 'aug (maj 7)'
+          } else if (topSteps === 10) {
+            return 'aug 7'
+          }
+        }
+        break
+    }
+    return 'UNKNOWN'
+  }
+
+  chordName (): string {
+    if (this.notes.length === 3) {
+      return this.triadName()
+    } else if (this.notes.length === 4) {
+      return this.seventhName()
+    } else {
+      return ''
+    }
   }
 }
 
@@ -110,34 +154,78 @@ const chord: ((scale: Array<Note>, start: number, size: number) => Chord) =
     const scaleArray: Array<Note> = wu.cycle(scale).drop(start).take(size + 2).toArray()
     const notes = scaleArray.filter((note: Note, idx: number) => idx % 2 === 0)
     const root = notes[0]
-    const name = chordName(notes)
-    return { notes, root, name }
+    return new Chord(notes, root)
   }
 
 const allNotes: Array<Note> = [
-  { sharp: 'C', flat: 'C', step: 1, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'C#', flat: 'Db', step: 2, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'D', flat: 'D', step: 3, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'D#', flat: 'Eb', step: 4, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'E', flat: 'E', step: 5, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'F', flat: 'F', step: 6, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'F#', flat: 'Gb', step: 7, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'G', flat: 'G', step: 8, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'G#', flat: 'Ab', step: 9, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'A', flat: 'A', step: 10, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'A#', flat: 'Bb', step: 11, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } },
-  { sharp: 'B', flat: 'B', step: 12, display: function () { return (this.sharp === this.flat) ? this.sharp : this.sharp + ' / ' + this.flat } }
+  new Note(1, 'C', 'C', 1),
+  new Note(2, 'C#', 'Db', 8),
+  new Note(3, 'D', 'D', 3),
+  new Note(4, 'D#', 'Eb', 10),
+  new Note(5, 'E', 'E', 5),
+  new Note(6, 'F', 'F', 12),
+  new Note(7, 'F#', 'Gb', 7),
+  new Note(8, 'G', 'G', 2),
+  new Note(9, 'G#', 'Ab', 9),
+  new Note(10, 'A', 'A', 4),
+  new Note(11, 'A#', 'Bb', 11),
+  new Note(12, 'B', 'B', 6)
 ]
 
-const lydianScaleGuide = [true, false, true, false, true, false, true, true, false, true, false, true]
-const majorScaleGuide = [true, false, true, false, true, true, false, true, false, true, false, true]
-const mixolydianScaleGuide = [true, false, true, false, true, true, false, true, false, true, true, false]
-const dorianScaleGuide = [true, false, true, true, false, true, false, true, false, true, true, false]
-const minorScaleGuide = [true, false, true, true, false, true, false, true, true, false, true, false]
-const phrygianScaleGuide = [true, true, false, true, false, true, false, true, true, false, true, false]
-const locrianScaleGuide = [true, true, false, true, false, true, true, false, true, false, true, false]
+class Mode {
+  guide: Array<boolean>;
+  biasDirection: string;
+  biasSteps: number;
 
-const scale: ((scaleGuide: Array<boolean>, startStep: number) => Array<Note>) = (scaleGuide: Array<boolean>, startStep = 0) => {
+  constructor (guide: Array<boolean>, biasDirection: string, biasSteps: number) {
+    this.guide = guide
+    this.biasDirection = biasDirection
+    this.biasSteps = biasSteps
+  }
+
+  biasFor (startCircleOfFithsStep: number): string {
+    const adjustmentSteps = (this.biasDirection === 'flat') ? (this.biasSteps * -1) : this.biasSteps
+    const adjustedSteps = startCircleOfFithsStep + adjustmentSteps
+    const fixedAdjustedSteps = (adjustedSteps < 1) ? (adjustedSteps + 12) : adjustedSteps
+    if (fixedAdjustedSteps >= 1 && fixedAdjustedSteps <= 7) {
+      return 'sharp'
+    } else {
+      return 'flat'
+    }
+  }
+}
+
+class Scale {
+  startStep: number;
+  mode: Mode;
+  bias: string;
+  notes: Array<Note>
+
+  constructor (startStep: number, mode: Mode) {
+    this.startStep = startStep
+    this.mode = mode
+    this.notes = this.scaleNotes()
+    this.bias = mode.biasFor(this.notes[0].circleOfFithsStep)
+  }
+
+  scaleNotes (): Array<Note> {
+    return wu.zip(wu.cycle(allNotes).dropWhile((note: Note) => note.step !== this.startStep), wu.cycle(this.mode.guide))
+      .filter((noteInfo: [Note, boolean]) => noteInfo[1])
+      .map((noteInfo: [Note, boolean]) => noteInfo[0])
+      .take(7)
+      .toArray()
+  }
+}
+
+const lydianMode = new Mode([true, false, true, false, true, false, true, true, false, true, false, true], 'sharp', 1)
+const majorScale = new Mode([true, false, true, false, true, true, false, true, false, true, false, true], 'sharp', 0)
+const mixolydianMode = new Mode([true, false, true, false, true, true, false, true, false, true, true, false], 'flat', 1)
+const dorianMode = new Mode([true, false, true, true, false, true, false, true, false, true, true, false], 'flat', 2)
+const minorScale = new Mode([true, false, true, true, false, true, false, true, true, false, true, false], 'flat', 3)
+const phrygianMode = new Mode([true, true, false, true, false, true, false, true, true, false, true, false], 'flat', 4)
+const locrianMode = new Mode([true, true, false, true, false, true, true, false, true, false, true, false], 'flat', 5)
+
+const scale: ((scaleGuide: Array<boolean>, startStep: number) => Array<Note>) = (scaleGuide: Array<boolean>, startStep = 0): Array<Note> => {
   return wu.zip(wu.cycle(allNotes).dropWhile((note: Note) => note.step !== startStep), wu.cycle(scaleGuide))
     .filter((noteInfo: [Note, boolean]) => noteInfo[1])
     .map((noteInfo: [Note, boolean]) => noteInfo[0])
@@ -145,17 +233,39 @@ const scale: ((scaleGuide: Array<boolean>, startStep: number) => Array<Note>) = 
     .toArray()
 }
 
+const determineDominant: ((root: Note) => Chord) = (root: Note): Chord => {
+  return chord(scale(majorScale.guide, root.step), 5, 3)
+}
+
+const determineDominantSeventh: ((root: Note) => Chord) = (root: Note): Chord => {
+  return chord(scale(majorScale.guide, root.step), 5, 4)
+}
+
+const determineDimSeventh: ((root: Note) => Chord) = (root: Note): Chord => {
+  return chord(scale(majorScale.guide, root.step), 7, 3)
+}
+
+const determineDimSeventhDominant: ((root: Note) => Chord) = (root: Note): Chord => {
+  return chord(scale(majorScale.guide, root.step), 7, 4)
+}
+
 export {
   Note,
   Chord,
   chord,
   allNotes,
-  lydianScaleGuide,
-  majorScaleGuide,
-  mixolydianScaleGuide,
-  dorianScaleGuide,
-  minorScaleGuide,
-  phrygianScaleGuide,
-  locrianScaleGuide,
-  scale
+  lydianMode,
+  majorScale,
+  mixolydianMode,
+  dorianMode,
+  minorScale,
+  phrygianMode,
+  locrianMode,
+  scale,
+  Scale,
+  Mode,
+  determineDominant,
+  determineDominantSeventh,
+  determineDimSeventh,
+  determineDimSeventhDominant
 }

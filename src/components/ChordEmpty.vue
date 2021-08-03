@@ -3,9 +3,10 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: 'ChordEmpty'
-}
+import { Component, Vue } from 'vue-property-decorator'
+
+@Component
+export default class ChordEmpty extends Vue { }
 </script>
 
 <style scoped>

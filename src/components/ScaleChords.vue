@@ -1,47 +1,45 @@
 <template>
   <div class="chord-chart">
     <ChordCategory :category="scaleName + ' Triads'" />
-    <Chord v-for="cTriad in triads" :chord="cTriad" :key="cTriad.root.sharp + scaleName + 'triad'"/>
+    <ChordDisplay v-for="cTriad in triads" :chord="cTriad" :key="cTriad.root.sharpNote + scaleName + 'triad'" :bias="scale.bias"/>
 
     <ChordCategory :category="scaleName + ' Sevenths'" />
-    <Chord v-for="cSeventh in sevenths" :chord="cSeventh" :key="cSeventh.root.sharp + scaleName + 'seventh'"/>
+    <ChordDisplay v-for="cSeventh in sevenths" :chord="cSeventh" :key="cSeventh.root.sharpNote + scaleName + 'seventh'" :bias="scale.bias"/>
   </div>
 </template>
 
 <script lang="ts">
 import ChordCategory from './ChordCategory.vue'
-import Chord from './Chord.vue'
-import { scale, chord, Note } from '../lib/scalesChords'
-import { PropType } from 'vue'
+import ChordDisplay from './ChordDisplay.vue'
+import { Scale, Mode, chord, Note } from '../lib/scalesChords'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
-export default {
+@Component({
   components: {
     ChordCategory,
-    Chord
-  },
-  props: {
-    keyRoot: { type: Object as PropType<Note> },
-    scaleName: String,
-    scaleNotesGuide: { type: Array as PropType<boolean[]> }
-  },
-  computed: {
-    scaleNotes: function () {
-      const startingStep = this.$store.state.key.step
-      return scale(this.scaleNotesGuide, startingStep)
-    },
-    triads: function () {
-      const sn = this.scaleNotes
-      return sn.map((note: Note, idx: number) => chord(sn, idx, 3))
-    },
-    sevenths: function () {
-      const sn = this.scaleNotes
-      return sn.map((note: Note, idx: number) => chord(sn, idx, 5))
-    }
-  },
-  data: function () {
-    return {
-      synth: this.$store.state.synth
-    }
+    ChordDisplay
+  }
+})
+export default class ScaleChords extends Vue {
+  @Prop({ required: true }) readonly keyRoot!: Note
+  @Prop({ required: true, type: String }) readonly scaleName!: string
+  @Prop({ required: true }) readonly mode!: Mode
+
+  private synth = this.$store.state.ChordsStore.synth
+
+  get scale () {
+    const startingStep = this.$store.state.ChordsStore.key.step
+    return new Scale(startingStep, this.mode)
+  }
+
+  get triads () {
+    const sn = this.scale.notes
+    return sn.map((note: Note, idx: number) => chord(sn, idx, 3))
+  }
+
+  get sevenths () {
+    const sn = this.scale.notes
+    return sn.map((note: Note, idx: number) => chord(sn, idx, 5))
   }
 }
 </script>

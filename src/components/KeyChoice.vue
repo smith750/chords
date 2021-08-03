@@ -1,28 +1,22 @@
 <template>
   <div id="key-choice">
     <select @change="updateKey">
-      <option v-for="(note, idx) in notes" :key="idx" v-bind:value="note.step">{{ note.display() }}</option>
+      <option v-for="(note, idx) in notes" :key="idx" v-bind:value="note.step" v-html="note.display"/>
     </select>
   </div>
 </template>
 
 <script lang="ts">
 import { allNotes } from '../lib/scalesChords'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default {
-  name: 'KeyChoice',
-  components: {
-  },
-  data: function () {
-    return {
-      notes: allNotes,
-      key: this.$store.state.key
-    }
-  },
-  methods: {
-    updateKey (evt) {
-      this.$store.commit('changeKey', evt.target.value)
-    }
+@Component
+export default class KeyChoice extends Vue {
+  private notes = allNotes;
+  private key = this.$store.state.ChordsStore.key;
+
+  updateKey (evt: any) {
+    this.$store.commit('changeKey', evt.target.value)
   }
 }
 </script>

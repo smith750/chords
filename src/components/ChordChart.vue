@@ -1,18 +1,18 @@
 <template>
   <div id="chord-charts">
-    <ScaleChords :keyRoot="root" :scaleName="'Major'" :scaleNotesGuide="majorScaleGuide" />
+    <ScaleChords :keyRoot="root" :scaleName="'Major'" :mode="majorScale" />
     <hr/>
-    <ScaleChords :keyRoot="root" :scaleName="'Minor'" :scaleNotesGuide="minorScaleGuide" />
+    <ScaleChords :keyRoot="root" :scaleName="'Minor'" :mode="minorScale" />
     <hr/>
-    <ScaleChords :keyRoot="root" :scaleName="'Lydian'" :scaleNotesGuide="lydianScaleGuide" />
+    <ScaleChords :keyRoot="root" :scaleName="'Lydian'" :mode="lydianMode" />
     <hr/>
-    <ScaleChords :keyRoot="root" :scaleName="'Mixolydian'" :scaleNotesGuide="mixolydianScaleGuide" />
+    <ScaleChords :keyRoot="root" :scaleName="'Mixolydian'" :mode="mixolydianMode" />
     <hr/>
-    <ScaleChords :keyRoot="root" :scaleName="'Dorian'" :scaleNotesGuide="dorianScaleGuide" />
+    <ScaleChords :keyRoot="root" :scaleName="'Dorian'" :mode="dorianMode" />
     <hr/>
-    <ScaleChords :keyRoot="root" :scaleName="'Phrygian'" :scaleNotesGuide="phrygianScaleGuide" />
+    <ScaleChords :keyRoot="root" :scaleName="'Phrygian'" :mode="phrygianMode" />
     <hr/>
-    <ScaleChords :keyRoot="root" :scaleName="'Locrian'" :scaleNotesGuide="locrianScaleGuide" />
+    <ScaleChords :keyRoot="root" :scaleName="'Locrian'" :mode="locrianMode" />
 
 <!--
     <ChordCategory category="Secondary Dominant Triads" />
@@ -42,30 +42,28 @@
 // import ChordEmpty from './ChordEmpty.vue'
 import ScaleChords from './ScaleChords.vue'
 import {
-  majorScaleGuide, minorScaleGuide, lydianScaleGuide, mixolydianScaleGuide,
-  dorianScaleGuide, phrygianScaleGuide, locrianScaleGuide
+  majorScale, minorScale, lydianMode, mixolydianMode,
+  dorianMode, phrygianMode, locrianMode
 } from '../lib/scalesChords'
+import { Component, Vue } from 'vue-property-decorator'
 
-export default {
+// https://blog.logrocket.com/vue-typescript-tutorial-examples/
+
+@Component({
   components: {
-    // ChordCategory,
-    // Chord,
-    // ChordEmpty,
     ScaleChords
-  },
-  data: function () {
-    return {
-      synth: this.$store.state.synth,
-      root: this.$store.state.key,
-      majorScaleGuide,
-      minorScaleGuide,
-      lydianScaleGuide,
-      mixolydianScaleGuide,
-      dorianScaleGuide,
-      phrygianScaleGuide,
-      locrianScaleGuide
-    }
   }
+})
+export default class ChordChart extends Vue {
+    private synth = this.$store.state.ChordsStore.synth;
+    private root = this.$store.state.ChordsStore.key;
+    private majorScale = majorScale;
+    private minorScale = minorScale;
+    private lydianMode = lydianMode;
+    private mixolydianMode = mixolydianMode;
+    private dorianMode = dorianMode;
+    private phrygianMode = phrygianMode;
+    private locrianMode = locrianMode;
 }
 </script>
 
