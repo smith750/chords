@@ -1,9 +1,9 @@
 <template>
-  <div class="chord" v-on:mousedown="startNotes" v-on:mouseup="stopNotes">
-    <div class="chord-name" v-html="chordName"><span v:if="seventh !== undefined" class="seventh">{{ seventh }}</span></div>
-    <div class="chord-symbol" v:if="numeral !== undefined">{{ numeral }}<span v:if="seventh !== undefined" class="seventh">{{ seventh }}</span></div>
-    <div class="spelling" v-html="chordSpelling"/>
-  </div>
+  <button class="chord" v-on:mousedown="startNotes" v-on:mouseup="stopNotes">
+    <span class="chord-name" v-html="chordName"><span v:if="seventh !== undefined" class="seventh">{{ seventh }}</span></span>
+    <span class="chord-symbol" v:if="numeral !== undefined">{{ numeral }}<span v:if="seventh !== undefined" class="seventh">{{ seventh }}</span></span>
+    <span class="spelling" v-html="chordSpelling"/>
+  </button>
 </template>
 
 <script lang="ts">
@@ -67,11 +67,13 @@ export default class ChordDisplay extends Vue {
   border-radius: 5px;
   border: 3px solid #000000;
   padding: 3px;
+  background-color: #fff;
 }
 
 .chord-name {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 1em;
+  display: block;
 }
 
 .chord-symbol {

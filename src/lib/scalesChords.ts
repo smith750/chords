@@ -234,19 +234,19 @@ const scale: ((scaleGuide: Array<boolean>, startStep: number) => Array<Note>) = 
 }
 
 const determineDominant: ((root: Note) => Chord) = (root: Note): Chord => {
-  return chord(scale(majorScale.guide, root.step), 5, 3)
+  return chord(scale(majorScale.guide, root.step), 4, 3)
 }
 
 const determineDominantSeventh: ((root: Note) => Chord) = (root: Note): Chord => {
-  return chord(scale(majorScale.guide, root.step), 5, 4)
+  return chord(scale(majorScale.guide, root.step), 4, 5)
 }
 
 const determineDimSeventh: ((root: Note) => Chord) = (root: Note): Chord => {
-  return chord(scale(majorScale.guide, root.step), 7, 3)
+  return chord(scale(majorScale.guide, root.step), 6, 3)
 }
 
 const determineDimSeventhDominant: ((root: Note) => Chord) = (root: Note): Chord => {
-  return chord(scale(majorScale.guide, root.step), 7, 4)
+  return chord(scale(majorScale.guide, root.step), 6, 5)
 }
 
 export {

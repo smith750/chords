@@ -16,7 +16,7 @@ export default class KeyChoice extends Vue {
   private key = this.$store.state.ChordsStore.key;
 
   updateKey (evt: any) {
-    this.$store.commit('changeKey', evt.target.value)
+    this.$store.commit('ChordsStore/changeKey', evt.target.value)
   }
 }
 </script>

@@ -25,8 +25,6 @@ export default class ScaleChords extends Vue {
   @Prop({ required: true, type: String }) readonly scaleName!: string
   @Prop({ required: true }) readonly mode!: Mode
 
-  private synth = this.$store.state.ChordsStore.synth
-
   get scale () {
     const startingStep = this.$store.state.ChordsStore.key.step
     return new Scale(startingStep, this.mode)
@@ -51,5 +49,6 @@ export default class ScaleChords extends Vue {
   column-gap: 10px;
   row-gap: 10px;
   width: 100%;
+  padding: 15px 0 0 15px;
 }
 </style>

@@ -16,7 +16,7 @@ class ChordsStore extends VuexModule {
   private synth = synth
 
   @Mutation
-  public changeKey (newKeyStep: string) {
+  public changeKey (newKeyStep: string): void {
     const newKey = allNotes.find((note: Note) => note.step === parseInt(newKeyStep)) || allNotes[0]
     this.key = newKey
     this.scale = new ChordScale(newKey.step, majorScale)
